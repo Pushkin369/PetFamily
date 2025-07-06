@@ -1,5 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
-using PetFamily.Domain.SpeciesAggregate;
+using PetFamily.Domain.Entities.VolunteerAggregate.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace PetFamily.Domain.PetAggregate
+namespace PetFamily.Domain.Entities.VolunteerAggregate
 {
 
     public class Pet : Entity<Guid>
@@ -21,9 +21,9 @@ namespace PetFamily.Domain.PetAggregate
         public string? GeneralDescription { get; private set; }
         public string? InfoAboutHealth { get; private set; }
         public string OwnerPhoneNumber { get; private set; }
-        public AddressValueObject Address { get; private set; }
-        public CharacteristicValueObject Characteristic { get; private set; }
-        public RequisitesValueObject Requisites { get; private set; }
+        public Address Address { get; private set; }
+        public Characteristic Characteristic { get; private set; }
+        public Requisites Requisites { get; private set; }
         public bool IsVaccinated { get; private set; }
         public bool IsCastrated { get; private set; }
         public HelpStatusEnum HelpStatus { get; private set; }
@@ -32,7 +32,7 @@ namespace PetFamily.Domain.PetAggregate
 
 
         private Pet() { } // For EF Core
-        private Pet(Guid id, string name, string generalDescription, string color, CharacteristicValueObject characteristic, HelpStatusEnum helpStatus) : base(id)
+        private Pet(Guid id, string name, string generalDescription, string color, Characteristic characteristic, HelpStatusEnum helpStatus) : base(id)
         {
             Nickname = name;
             GeneralDescription = generalDescription;
@@ -44,8 +44,6 @@ namespace PetFamily.Domain.PetAggregate
 
 
         public static Guid NewId() => Guid.NewGuid();
-
-
         public static Result<Pet> Create(string name, string description, string breed, string color, double weight, double height, string phone, HelpStatusEnum helpStatus)
         {
 
@@ -61,7 +59,7 @@ namespace PetFamily.Domain.PetAggregate
             if (string.IsNullOrWhiteSpace(color))
                 return Result.Failure<Pet>("Color cannot be empty");
 
-            var ch = CharacteristicValueObject.Create(weight, height);
+            var ch = Characteristic.Create(weight, height);
 
             if (ch.IsFailure)
                 return Result.Failure<Pet>(ch.Error);
@@ -71,8 +69,6 @@ namespace PetFamily.Domain.PetAggregate
 
             if (helpStatus == default)
                 return Result.Failure<Pet>("Pet help status is required");
-
-
 
             var pet = new Pet(NewId(), name, description, color, ch.Value, helpStatus);
 

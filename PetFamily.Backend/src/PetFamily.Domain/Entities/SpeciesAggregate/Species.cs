@@ -1,32 +1,25 @@
 ﻿using CSharpFunctionalExtensions;
-using PetFamily.Domain.PetAggregate;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PetFamily.Domain.SpeciesAggregate
+namespace PetFamily.Domain.Entities.SpeciesAggregate
 {
     public class Species : Entity<Guid>
     {
         private readonly List<Breed> _breed = [];
-
-
         public string Name { get; private set; }
         public IReadOnlyList<Breed> Breeds => _breed;
 
-
+        private Species() { } // For EF Core
         private Species(Guid id, string name) : base(id)
         {
             Name = name;
         }
-        private Species() { } // For EF Core
-
 
         public static Guid NewId() => Guid.NewGuid();
-
-
         public Result AddPet(Breed? breed)
         {
             if (breed is null)
@@ -36,8 +29,6 @@ namespace PetFamily.Domain.SpeciesAggregate
 
             return Result.Success();
         }
-
-
         public static Result<Species> Create(string name)
         {
 
