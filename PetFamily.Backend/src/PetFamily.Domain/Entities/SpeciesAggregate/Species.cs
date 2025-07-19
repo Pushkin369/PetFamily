@@ -7,19 +7,29 @@ using System.Threading.Tasks;
 
 namespace PetFamily.Domain.Entities.SpeciesAggregate
 {
-    public class Species : Entity<Guid>
+    public record SpeciesId(Guid Value)
+    {
+        public static SpeciesId NewSpeciesId => new SpeciesId(Guid.NewGuid());
+
+        public static SpeciesId Empty => new SpeciesId(Guid.Empty);
+    }
+
+
+    public class Species : Shared.Entity<SpeciesId>
     {
         private readonly List<Breed> _breed = [];
         public string Name { get; private set; }
         public IReadOnlyList<Breed> Breeds => _breed;
 
-        private Species() { } // For EF Core
-        private Species(Guid id, string name) : base(id)
+        private Species(SpeciesId speciesId) : base(speciesId)
+        {
+        } // For EF Core
+
+        private Species(SpeciesId speciesId, string name) : base(speciesId)
         {
             Name = name;
         }
 
-        public static Guid NewId() => Guid.NewGuid();
         public Result AddPet(Breed? breed)
         {
             if (breed is null)
@@ -29,13 +39,13 @@ namespace PetFamily.Domain.Entities.SpeciesAggregate
 
             return Result.Success();
         }
+
         public static Result<Species> Create(string name)
         {
-
             if (string.IsNullOrWhiteSpace(name))
                 return Result.Failure<Species>("Name cannot be empty");
 
-            var species = new Species(NewId(), name);
+            var species = new Species(SpeciesId.NewSpeciesId, name);
 
             return Result.Success(species);
         }
