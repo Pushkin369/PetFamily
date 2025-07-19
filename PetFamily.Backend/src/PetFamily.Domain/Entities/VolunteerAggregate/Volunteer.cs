@@ -15,8 +15,14 @@ namespace PetFamily.Domain.Entities.VolunteerAggregate
         public static VolunteerId NewVolunteerId => new VolunteerId(Guid.NewGuid());
 
         public static VolunteerId Empty => new VolunteerId(Guid.Empty);
+
+        public static VolunteerId Create(Guid id) => new VolunteerId(id);
     }
 
+    public record SocialNetworkList()
+    {
+        public List<SocialNetwork> SocialNetworks { get; private set; }
+    }
 
     public class Volunteer : Shared.Entity<VolunteerId>
     {
@@ -31,7 +37,7 @@ namespace PetFamily.Domain.Entities.VolunteerAggregate
         public int Experience { get; private set; }
 
         public IReadOnlyList<Pet> Pets => _pets;
-        public IReadOnlyList<SocialNetwork> SocialNetworks => _socialNetworks;
+        public SocialNetworkList  SocialNetworksList { get; private set; }
 
         public int GetCountPetFoundAHome() => Pets.Count(p => p.HelpStatus == HelpStatusEnum.FoundAHome);
         public int GetCountPetLookingAHome() => Pets.Count(p => p.HelpStatus == HelpStatusEnum.LookingForAHome);

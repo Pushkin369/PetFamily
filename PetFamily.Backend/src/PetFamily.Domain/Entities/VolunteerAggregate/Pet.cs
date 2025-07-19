@@ -8,6 +8,7 @@ using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using PetFamily.Domain.Entities.SpeciesAggregate;
 
 namespace PetFamily.Domain.Entities.VolunteerAggregate
 {
@@ -16,15 +17,17 @@ namespace PetFamily.Domain.Entities.VolunteerAggregate
         public static PetId NewPetId => new PetId(Guid.NewGuid());
 
         public static PetId Empty => new PetId(Guid.Empty);
+
+        public static PetId Create(Guid id) => new PetId(id);
     }
 
 
     public class Pet : Shared.Entity<PetId>
     {
-        public Guid SpeciesId { get; private set; }
-        public Guid BreedId { get; private set; }
+        public SpeciesId SpeciesId { get; private set; }
+        public BreedId BreedId { get; private set; }
         public string Name { get; private set; }
-        public string? Color { get; private set; }
+        public string Color { get; private set; }
         public string? GeneralDescription { get; private set; }
         public string? InfoAboutHealth { get; private set; }
 
