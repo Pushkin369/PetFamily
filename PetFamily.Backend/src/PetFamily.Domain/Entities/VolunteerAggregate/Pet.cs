@@ -42,6 +42,8 @@ namespace PetFamily.Domain.Entities.VolunteerAggregate
         public DateOnly DateOfBirth { get; private set; }
         public DateTime DateOfСreation { get; private set; }
 
+        private Pet() : base(default!) { }
+
         private Pet(PetId petId) : base(petId)
         {
         } // For EF Core

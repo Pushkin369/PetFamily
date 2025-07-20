@@ -28,7 +28,7 @@ namespace PetFamily.Domain.Entities.VolunteerAggregate
     {
         private readonly List<SocialNetwork> _socialNetworks = [];
         private readonly List<Pet> _pets = [];
-
+        private Volunteer() : base(default!) { }
         public FullName FIO { private set; get; }
         public Phone Phone { get; private set; }
         public Email Email { get; private set; }

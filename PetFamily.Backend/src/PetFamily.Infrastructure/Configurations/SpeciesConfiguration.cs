@@ -9,7 +9,7 @@ public class SpeciesConfiguration : IEntityTypeConfiguration<Species>
 {
     public void Configure(EntityTypeBuilder<Species> builder)
     {
-        builder.ToTable("pets");
+        builder.ToTable("species");
         
         builder.HasKey(x => x.Id);
 

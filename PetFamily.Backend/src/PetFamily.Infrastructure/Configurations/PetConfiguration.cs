@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Domain.Entities.SpeciesAggregate;
 using PetFamily.Domain.Entities.VolunteerAggregate;
+using PetFamily.Domain.Entities.VolunteerAggregate.ValueObjects;
 using PetFamily.Domain.Shared;
 
 namespace PetFamily.Infrastructure.Configurations;
@@ -54,8 +55,12 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
             .HasMaxLength(Constants.MAX_LENGTH_HIGTH_TEXT);
 
         builder.Property(x => x.OwnerPhoneNumber)
+            .HasConversion(
+                phone => phone.Value,                     
+                value => Phone.Create(value).Value)   
             .IsRequired()
             .HasColumnName("owner_phone_number");
+
 
         builder.ComplexProperty(p => p.Address, addr =>
         {

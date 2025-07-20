@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Domain.Entities.VolunteerAggregate;
+using PetFamily.Domain.Entities.VolunteerAggregate.ValueObjects;
 using PetFamily.Domain.Shared;
 
 namespace PetFamily.Infrastructure.Configurations;
@@ -36,13 +37,18 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
                 .HasMaxLength(Constants.MAX_LENGTH_LOW_TEXT);
         });
 
-        builder.Property(p => p.Phone)
-            .HasColumnName("phone")
+        builder.Property(x => x.Phone)
+            .HasConversion(
+                phone => phone.Value,                     
+                value => Phone.Create(value).Value)   
             .IsRequired()
-            .HasMaxLength(Constants.MAX_LENGTH_LOW_TEXT);
+            .HasColumnName("phone");
 
         builder.Property(p => p.Email)
             .HasColumnName("email")
+            .HasConversion(
+                email => email.Value,                     
+                value => Email.Create(value).Value)  
             .IsRequired()
             .HasMaxLength(Constants.MAX_LENGTH_LOW_TEXT);
 

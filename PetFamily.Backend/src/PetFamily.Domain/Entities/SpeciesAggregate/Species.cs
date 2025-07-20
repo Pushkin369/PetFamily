@@ -23,6 +23,8 @@ namespace PetFamily.Domain.Entities.SpeciesAggregate
         public string Name { get; private set; }
         public IReadOnlyList<Breed> Breeds => _breed;
 
+        private Species() : base(default!) { }
+
         private Species(SpeciesId speciesId) : base(speciesId)
         {
         } // For EF Core
