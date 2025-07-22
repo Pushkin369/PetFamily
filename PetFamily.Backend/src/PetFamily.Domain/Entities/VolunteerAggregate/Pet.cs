@@ -48,10 +48,20 @@ namespace PetFamily.Domain.Entities.VolunteerAggregate
         {
         } // For EF Core
 
-        private Pet(PetId petId, string name, string color, string generalDescription,
+        private Pet(
+            PetId petId, 
+            string name, 
+            string color, 
+            string generalDescription,
             string infoAboutHealthcharacteristic,
-            Phone ownerPhoneNumber, Address address, Characteristic characteristic, Requisites requisites,
-            bool isVaccinated, bool isCastrated, HelpStatusEnum helpStatus, DateOnly dateOfBirth) : base(petId)
+            Phone ownerPhoneNumber, 
+            Address address, 
+            Characteristic characteristic, 
+            Requisites requisites,
+            bool isVaccinated, 
+            bool isCastrated, 
+            HelpStatusEnum helpStatus, 
+            DateOnly dateOfBirth) : base(petId)
         {
             Name = name;
             Color = color;
@@ -68,10 +78,16 @@ namespace PetFamily.Domain.Entities.VolunteerAggregate
             DateOfСreation = DateTime.UtcNow;
         }
 
-        public static Result<Pet> Create(string name, string color, string generalDescription, string infoAboutHealth,
+        public static Result<Pet> Create(
+            string name, 
+            string color, 
+            string generalDescription, 
+            string infoAboutHealth,
             string ownerPhoneNumber,
-            string country, string state, string city, string street, string house, double weight, double height,
-            string nameReq, string descriptionReq, string descriptionTransferReq, bool isVaccinated, bool isCastrated,
+            string country, string state, string city, string street, string house, 
+            double weight, double height,
+            string nameReq, string descriptionReq, string descriptionTransferReq, 
+            bool isVaccinated, bool isCastrated,
             HelpStatusEnum helpStatus, DateOnly dateOfBirth)
         {
             if (string.IsNullOrWhiteSpace(name))

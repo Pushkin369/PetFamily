@@ -48,7 +48,12 @@ namespace PetFamily.Domain.Entities.VolunteerAggregate
         {
         } // For EF Core
 
-        private Volunteer(VolunteerId volunteerId, FullName fio, Phone phone, Email email, Requisites requisites,
+        private Volunteer(
+            VolunteerId volunteerId, 
+            FullName fio, 
+            Phone phone, 
+            Email email, 
+            Requisites requisites,
             string generalDescription, int experience) : base(volunteerId)
         {
             FIO = fio;
@@ -60,8 +65,11 @@ namespace PetFamily.Domain.Entities.VolunteerAggregate
         }
 
 
-        public static Result<Volunteer> Create(string firstname, string surname, string patronymic,
-            string phone, string email, string nameReq, string descriptionReq, string descriptionTransferReq,
+        public static Result<Volunteer> Create(
+            string firstname, string surname, string patronymic,
+            string phone, 
+            string email, 
+            string nameReq, string descriptionReq, string descriptionTransferReq,
             string description, int experience)
         {
             var fioResult = FullName.Create(firstname, surname, patronymic);
