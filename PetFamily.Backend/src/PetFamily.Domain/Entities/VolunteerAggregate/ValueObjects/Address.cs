@@ -4,7 +4,12 @@ namespace PetFamily.Domain.Entities.VolunteerAggregate.ValueObjects;
 
 public record Address(string Country, string State, string City, string Street, string House)
 {
-    public static Result<Address> Create(string country, string state, string city, string street, string house)
+    public static Result<Address> Create(
+        string country, 
+        string state, 
+        string city, 
+        string street, 
+        string house)
     {
         if (string.IsNullOrWhiteSpace(country))
             return Result.Failure<Address>("Country is required");

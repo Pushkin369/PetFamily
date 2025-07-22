@@ -10,7 +10,6 @@ namespace PetFamily.Infrastructure
     {
         private const string DATABASE = "Database";
         public DbSet<Volunteer> Volunteers => Set<Volunteer>();
-        
         public DbSet<Species> Species => Set<Species>();
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
