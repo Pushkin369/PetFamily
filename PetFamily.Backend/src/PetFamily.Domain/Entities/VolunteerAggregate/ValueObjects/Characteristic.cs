@@ -2,7 +2,7 @@
 
 namespace PetFamily.Domain.Entities.VolunteerAggregate.ValueObjects
 {
-    public record Characteristic(double Weigth, double Heigth)
+    public record Characteristic(double Weigh, double Height)
     {
         public static Result<Characteristic> Create(double weigth, double heigth)
         {

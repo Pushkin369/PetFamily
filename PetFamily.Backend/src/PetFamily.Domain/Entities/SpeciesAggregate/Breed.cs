@@ -7,22 +7,35 @@ using System.Threading.Tasks;
 
 namespace PetFamily.Domain.Entities.SpeciesAggregate
 {
-    public class Breed : Entity<Guid>
+    public record BreedId(Guid Value)
+    {
+        public static BreedId NewBreedId => new BreedId(Guid.NewGuid());
+
+        public static BreedId Empty => new BreedId(Guid.Empty);
+
+        public static BreedId Create(Guid id) => new BreedId(id);
+    }
+
+
+    public class Breed : Shared.Entity<BreedId>
     {
         public string Name { get; private set; }
-        private Breed() { } // For EF Core
-        private Breed(Guid id, string name) : base(id)
+
+        private Breed(BreedId id) : base(id)
+        {
+        } // For EF Core
+
+        private Breed(BreedId breedId, string name) : base(breedId)
         {
             Name = name;
         }
 
-        public static Guid NewId() => Guid.NewGuid();
         public static Result<Breed> Create(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
                 return Result.Failure<Breed>("Name cannot be empty");
 
-            var breed = new Breed(NewId(), name);
+            var breed = new Breed(BreedId.NewBreedId, name);
 
             return Result.Success(breed);
         }
