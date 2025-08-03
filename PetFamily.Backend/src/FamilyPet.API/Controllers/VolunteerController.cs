@@ -1,16 +1,23 @@
+using FamilyPet.API.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using PetFamily.Application.Volunteers.CreateVolunteer;
 
 namespace FamilyPet.API.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class VolunteerController : ControllerBase
+    public class VolunteerController : ApplicationController
     {
-        
-        [HttpGet]
-        public string Get()
+        [HttpPost]
+        public async Task<ActionResult<Guid>> Create(
+            [FromServices] CreateVolunteerHandler handler,
+            [FromBody] CreateVolunteerRequest request,
+            CancellationToken cancellationToken = default)
         {
-            return "Hello";
+            var result = await handler.Handle(request, cancellationToken);
+            
+            if (result.IsFailure)
+                return result.Error.ToActionResult();
+            
+            return Ok(result.Value);
         }
     }
 }

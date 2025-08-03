@@ -63,6 +63,7 @@ namespace PetFamily.Domain.Entities.VolunteerAggregate
             Requisites = requisites;
             GeneralDescription = generalDescription;
             Experience = experience;
+            SocialNetworksList = new SocialNetworkList();
         }
 
 
