@@ -1,10 +1,12 @@
 using CSharpFunctionalExtensions;
 using System.Text.RegularExpressions;
+using PetFamily.Domain.Shared;
 
 namespace PetFamily.Domain.Entities.VolunteerAggregate.ValueObjects;
 
 public sealed record Email
 {
+    public const int EMAIL_MAX_LENGTH = 256;
     private static readonly Regex EmailRegex =
         new(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
@@ -12,20 +14,20 @@ public sealed record Email
 
     private Email(string value) => Value = value;
 
-    public static Result<Email> Create(string email)
+    public static Result<Email, Error> Create(string email)
     {
         if (string.IsNullOrWhiteSpace(email))
-            return Result.Failure<Email>("Email is required");
+            return Errors.General.ValidationEmpty(email);
 
         email = email.Trim();
 
-        if (email.Length > 254)
-            return Result.Failure<Email>("Email is too long");
+        if (email.Length > EMAIL_MAX_LENGTH)
+            return Errors.General.ValidationLength(email, $"more than 0 and less than {EMAIL_MAX_LENGTH}");
 
         if (!EmailRegex.IsMatch(email))
-            return Result.Failure<Email>("Email format is invalid");
+            return Errors.General.ValidationFormat(email, "name@exaple.com");
 
-        return Result.Success(new Email(email));
+        return new Email(email);
     }
 
     public override string ToString() => Value;

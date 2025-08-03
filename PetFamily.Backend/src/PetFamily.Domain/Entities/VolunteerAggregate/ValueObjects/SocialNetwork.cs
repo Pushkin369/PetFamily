@@ -1,22 +1,23 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 
 
 namespace PetFamily.Domain.Entities.VolunteerAggregate.ValueObjects
 {
     public record SocialNetwork(string Name, string Link)
     {
-        public static Result<SocialNetwork> Create(string name, string link)
+        public static Result<SocialNetwork,Error> Create(string name, string link)
         {
             if (string.IsNullOrWhiteSpace(name))
-                return Result.Failure<SocialNetwork>("Social network name is required");
+                return Errors.General.ValidationEmpty(name);
 
             if (string.IsNullOrWhiteSpace(link))
-                return Result.Failure<SocialNetwork>("Link is required");
+                return Errors.General.ValidationEmpty(name);
 
             if (!Uri.IsWellFormedUriString(link, UriKind.Absolute))
-                return Result.Failure<SocialNetwork>("Link is not a valid URL");
+                return Errors.General.ValidationFormat(link,"https://localhost");
 
-            return Result.Success(new SocialNetwork(name, link));
+            return new SocialNetwork(name, link);
         }
     }
 }

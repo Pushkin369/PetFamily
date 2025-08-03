@@ -1,27 +1,28 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 
 namespace PetFamily.Domain.Entities.VolunteerAggregate.ValueObjects
 {
     public record FullName(string Name, string Surname, string? Patronymic)
     {
-        public static Result<FullName> Create(string name, string surname, string? patronymic)
+        public static Result<FullName, Error> Create(string name, string surname, string? patronymic)
         {
             if (string.IsNullOrWhiteSpace(name))
-                return Result.Failure<FullName>("Name is required");
+                return Errors.General.ValidationEmpty(name);
 
             if (string.IsNullOrWhiteSpace(surname))
-                return Result.Failure<FullName>("Surname is required");
+                return Errors.General.ValidationEmpty(surname);
 
-            if (name.Length > 100)
-                return Result.Failure<FullName>("Name is too long");
+            if (name.Length > Constants.MAX_LENGTH_LOW_TEXT)
+                return Errors.General.ValidationLength(name, $"more than 0 and less than {Constants.MAX_LENGTH_LOW_TEXT}");
 
             if (surname.Length > 100)
-                return Result.Failure<FullName>("Surname is too long");
+                return Errors.General.ValidationLength(surname, $"more than 0 and less than {Constants.MAX_LENGTH_LOW_TEXT}");
 
             if (!string.IsNullOrWhiteSpace(patronymic) && patronymic.Length > 100)
-                return Result.Failure<FullName>("Patronymic is too long");
+                return Errors.General.ValidationLength(patronymic, $"more than 0 and less than {Constants.MAX_LENGTH_LOW_TEXT}");
 
-            return Result.Success(new FullName(name, surname, patronymic));
+            return new FullName(name, surname, patronymic);
         }
     }
 }

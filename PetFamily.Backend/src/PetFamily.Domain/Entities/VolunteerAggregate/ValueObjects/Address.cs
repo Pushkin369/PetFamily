@@ -1,10 +1,11 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 
 namespace PetFamily.Domain.Entities.VolunteerAggregate.ValueObjects;
 
 public record Address(string Country, string State, string City, string Street, string House)
 {
-    public static Result<Address> Create(
+    public static Result<Address,Error> Create(
         string country, 
         string state, 
         string city, 
@@ -12,20 +13,20 @@ public record Address(string Country, string State, string City, string Street, 
         string house)
     {
         if (string.IsNullOrWhiteSpace(country))
-            return Result.Failure<Address>("Country is required");
+            return Errors.General.ValidationEmpty(country);
 
         if (string.IsNullOrWhiteSpace(state))
-            return Result.Failure<Address>("State is required");
+            return Errors.General.ValidationEmpty(state);
 
         if (string.IsNullOrWhiteSpace(city))
-            return Result.Failure<Address>("City is required");
+            return Errors.General.ValidationEmpty(city);
 
         if (string.IsNullOrWhiteSpace(street))
-            return Result.Failure<Address>("Street is required");
+            return Errors.General.ValidationEmpty(street);
 
         if (string.IsNullOrWhiteSpace(house))
-            return Result.Failure<Address>("House is required");
+            return Errors.General.ValidationEmpty(house);
 
-        return Result.Success(new Address(country, state, city, street, house));
+        return new Address(country, state, city, street, house);
     }
 }
