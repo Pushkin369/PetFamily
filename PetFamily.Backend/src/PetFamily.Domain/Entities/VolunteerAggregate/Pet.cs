@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using PetFamily.Domain.Entities.SpeciesAggregate;
+using PetFamily.Domain.Shared;
 
 namespace PetFamily.Domain.Entities.VolunteerAggregate
 {
@@ -42,11 +43,8 @@ namespace PetFamily.Domain.Entities.VolunteerAggregate
         public DateOnly DateOfBirth { get; private set; }
         public DateTime DateOfСreation { get; private set; }
 
-        private Pet() : base(default!) { }
-
-        private Pet(PetId petId) : base(petId)
-        {
-        } // For EF Core
+        private Pet() : base(default!) { }// For EF Core
+        private Pet(PetId petId) : base(petId) { } 
 
         private Pet(
             PetId petId, 
@@ -78,7 +76,7 @@ namespace PetFamily.Domain.Entities.VolunteerAggregate
             DateOfСreation = DateTime.UtcNow;
         }
 
-        public static Result<Pet> Create(
+        public static Result<Pet, Error> Create(
             string name, 
             string color, 
             string generalDescription, 
@@ -91,46 +89,46 @@ namespace PetFamily.Domain.Entities.VolunteerAggregate
             HelpStatusEnum helpStatus, DateOnly dateOfBirth)
         {
             if (string.IsNullOrWhiteSpace(name))
-                return Result.Failure<Pet>("Name cannot be empty");
+                return Errors.General.ValidationEmpty(name);
 
             if (string.IsNullOrWhiteSpace(color))
-                return Result.Failure<Pet>("Color cannot be empty");
+                return Errors.General.ValidationEmpty(color);
 
             if (string.IsNullOrWhiteSpace(generalDescription))
-                return Result.Failure<Pet>("Description cannot be empty");
+                return Errors.General.ValidationEmpty(generalDescription);
 
             if (string.IsNullOrWhiteSpace(infoAboutHealth))
-                return Result.Failure<Pet>("Description cannot be empty");
+                return Errors.General.ValidationEmpty(infoAboutHealth);
 
-            var ph = Phone.Create(ownerPhoneNumber);
-            if (ph.IsFailure)
-                return Result.Failure<Pet>(ph.Error);
+            var phoneResult = Phone.Create(ownerPhoneNumber);
+            if (phoneResult.IsFailure)
+                return phoneResult.Error;
 
-            var address = Address.Create(country, state, city, street, house);
-            if (address.IsFailure)
-                return Result.Failure<Pet>(address.Error);
+            var addressResult = Address.Create(country, state, city, street, house);
+            if (addressResult.IsFailure)
+                return addressResult.Error;
 
-            var ch = Characteristic.Create(weight, height);
-            if (ch.IsFailure)
-                return Result.Failure<Pet>(ch.Error);
+            var chResult = Characteristic.Create(weight, height);
+            if (chResult.IsFailure)
+                return chResult.Error;
 
-            var req = Requisites.Create(nameReq, descriptionReq, descriptionTransferReq);
-            if (req.IsFailure)
-                return Result.Failure<Pet>(req.Error);
+            var reqResult = Requisites.Create(nameReq, descriptionReq, descriptionTransferReq);
+            if (reqResult.IsFailure)
+                return reqResult.Error;
 
             if (helpStatus == default)
-                return Result.Failure<Pet>("Pet help status is required");
+                return Errors.General.ValidationEmpty(helpStatus.ToString());
 
             if (dateOfBirth == default)
-                return Result.Failure<Pet>("Date of birth is required");
+                return Errors.General.ValidationEmpty(dateOfBirth.ToString());
 
             if (dateOfBirth > DateOnly.FromDateTime(DateTime.UtcNow))
-                return Result.Failure<Pet>("Date of birth cannot be in the future");
+                 return Errors.General.ValidationEmpty(dateOfBirth.ToString());
 
-            var pet = new Pet(PetId.NewPetId, name, color, generalDescription, infoAboutHealth,
-                ph.Value, address.Value, ch.Value, req.Value, isVaccinated, isCastrated, helpStatus, dateOfBirth);
-
-            return Result.Success(pet);
+            return new Pet(
+                PetId.NewPetId, name, color, generalDescription, infoAboutHealth,
+                phoneResult.Value, addressResult.Value, chResult.Value, reqResult.Value,
+                isVaccinated, isCastrated, helpStatus, dateOfBirth);
         }
     }
 

@@ -7,6 +7,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using PetFamily.Domain.Shared;
 
 namespace PetFamily.Domain.Entities.VolunteerAggregate
 {
@@ -65,7 +66,7 @@ namespace PetFamily.Domain.Entities.VolunteerAggregate
         }
 
 
-        public static Result<Volunteer> Create(
+        public static Result<Volunteer, Error> Create(
             string firstname, string surname, string patronymic,
             string phone, 
             string email, 
@@ -74,30 +75,30 @@ namespace PetFamily.Domain.Entities.VolunteerAggregate
         {
             var fioResult = FullName.Create(firstname, surname, patronymic);
             if (fioResult.IsFailure)
-                return Result.Failure<Volunteer>(fioResult.Error);
+                return fioResult.Error;
 
-            var ph = Phone.Create(phone);
-            if (ph.IsFailure)
-                return Result.Failure<Volunteer>(ph.Error);
-
+            var phoneResult = Phone.Create(phone);
+            if (phoneResult.IsFailure)
+                return phoneResult.Error;
+            
             var emailResult = Email.Create(email);
             if (emailResult.IsFailure)
-                return Result.Failure<Volunteer>(emailResult.Error);
+                return emailResult.Error;
 
-            var req = Requisites.Create(nameReq, descriptionReq, descriptionTransferReq);
-            if (req.IsFailure)
-                return Result.Failure<Volunteer>(req.Error);
+            var reqResult = Requisites.Create(nameReq, descriptionReq, descriptionTransferReq);
+            if (reqResult.IsFailure)
+                return reqResult.Error;
 
             if (string.IsNullOrWhiteSpace(description))
-                return Result.Failure<Volunteer>("Description cannot be empty");
+                return Errors.General.ValidationEmpty(description);
 
             if (experience < 0)
-                return Result.Failure<Volunteer>("Experience cannot be negative");
+                return Errors.General.ValidationLength(experience.ToString(), "more than 0");
 
-            var volunteer = new Volunteer(VolunteerId.NewVolunteerId, fioResult.Value, ph.Value, emailResult.Value,
-                req.Value, description, experience);
-
-            return Result.Success(volunteer);
+            return new Volunteer(
+                VolunteerId.NewVolunteerId, fioResult.Value,
+                phoneResult.Value, emailResult.Value,
+                reqResult.Value, description, experience);
         }
 
         public Result AddSocialNetwork(string name, string link)
@@ -105,7 +106,7 @@ namespace PetFamily.Domain.Entities.VolunteerAggregate
             var socialNetwork = SocialNetwork.Create(name, link);
 
             if (socialNetwork.IsFailure)
-                return Result.Failure(socialNetwork.Error);
+                return Result.Failure(socialNetwork.Error.Message);
 
             _socialNetworks.Add(socialNetwork.Value);
 
