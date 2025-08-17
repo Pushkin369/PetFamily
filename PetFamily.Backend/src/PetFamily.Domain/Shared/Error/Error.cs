@@ -19,6 +19,6 @@ public record Error(string Code, string Message, ErrorType Type)
 
     public static Error AlreadyExists(string code, string message)
     {
-         return new Error(code, message, ErrorType.Conflict);
+        return new Error(code, message, ErrorType.Conflict);
     }
 }

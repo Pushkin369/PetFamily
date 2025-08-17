@@ -1,12 +1,16 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.Shared;
 
-
 namespace PetFamily.Domain.Entities.VolunteerAggregate.ValueObjects
 {
+    public record SocialNetworkList()
+    {
+        public List<SocialNetwork> SocialNetworks { get; private set; }
+    }
+
     public record SocialNetwork(string Name, string Link)
     {
-        public static Result<SocialNetwork,Error> Create(string name, string link)
+        public static Result<SocialNetwork, Error> Create(string name, string link)
         {
             if (string.IsNullOrWhiteSpace(name))
                 return Errors.General.ValidationEmpty(name);
@@ -15,7 +19,7 @@ namespace PetFamily.Domain.Entities.VolunteerAggregate.ValueObjects
                 return Errors.General.ValidationEmpty(name);
 
             if (!Uri.IsWellFormedUriString(link, UriKind.Absolute))
-                return Errors.General.ValidationFormat(link,"https://localhost");
+                return Errors.General.ValidationFormat(link, "https://localhost");
 
             return new SocialNetwork(name, link);
         }

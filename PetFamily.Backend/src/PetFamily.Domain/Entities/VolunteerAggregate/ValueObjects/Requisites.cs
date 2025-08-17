@@ -5,7 +5,7 @@ namespace PetFamily.Domain.Entities.VolunteerAggregate.ValueObjects
 {
     public record Requisites(string Name, string Description, string DescriptionTransfer)
     {
-        public static Result<Requisites,Error> Create(string name, string description, string descriptionTransfer)
+        public static Result<Requisites, Error> Create(string name, string description, string descriptionTransfer)
         {
             if (string.IsNullOrWhiteSpace(name))
                 return Errors.General.ValidationEmpty(name);
@@ -20,4 +20,3 @@ namespace PetFamily.Domain.Entities.VolunteerAggregate.ValueObjects
         }
     }
 }
-

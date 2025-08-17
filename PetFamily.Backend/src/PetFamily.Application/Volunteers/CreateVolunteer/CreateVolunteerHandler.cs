@@ -12,27 +12,30 @@ public class CreateVolunteerHandler
     {
         _volunteerRepository = volunteerRepository;
     }
-    public async Task<Result<Guid,Error>> Handle(CreateVolunteerRequest? request, CancellationToken cancellationToken = default)
+
+    public async Task<Result<Guid, Error>> Handle(CreateVolunteerRequest? request,
+        CancellationToken cancellationToken = default)
     {
         var volunteerResult = Volunteer.Create(
-            request.firstname, 
-            request.surname, 
+            request.firstname,
+            request.surname,
             request.patronymic,
-            request.phone, 
-            request.email, 
+            request.phone,
+            request.email,
             request.nameReq,
             request.descriptionReq,
             request.descriptionTransferReq,
             request.description,
             request.experience);
-        
-        if(volunteerResult.IsFailure)
+
+        if (volunteerResult.IsFailure)
             return volunteerResult.Error;
-        
-        volunteerResult.Value.AddSocialNetwork("test", "https://chatgpt.com");
-        
+
+        volunteerResult.Value.AddSocialNetwork("test",
+            "https://chatgpt.com");
+
         await _volunteerRepository.Add(volunteerResult.Value, cancellationToken);
-        
+
         return volunteerResult.Value.Id.Value;
     }
 }
