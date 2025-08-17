@@ -60,47 +60,21 @@ namespace PetFamily.Domain.Entities.VolunteerAggregate
 
 
         public static Result<Volunteer, Error> Create(
-            string firstname,
-            string surname,
-            string patronymic,
-            string phone,
-            string email,
-            string nameReq,
-            string descriptionReq,
-            string descriptionTransferReq,
-            string description,
+            FullName fio,
+            Phone phone,
+            Email email,
+            Requisites requisites,
+            string generalDescription,
             int experience)
         {
-            var fioResult = FullName.Create(firstname, surname, patronymic);
-            if (fioResult.IsFailure)
-                return fioResult.Error;
-
-            var phoneResult = Phone.Create(phone);
-            if (phoneResult.IsFailure)
-                return phoneResult.Error;
-
-            var emailResult = Email.Create(email);
-            if (emailResult.IsFailure)
-                return emailResult.Error;
-
-            var reqResult = Requisites.Create(nameReq, descriptionReq, descriptionTransferReq);
-            if (reqResult.IsFailure)
-                return reqResult.Error;
-
-            if (string.IsNullOrWhiteSpace(description))
-                return Errors.General.ValidationEmpty(description);
+            if (string.IsNullOrWhiteSpace(generalDescription))
+                return Errors.General.ValidationEmpty(generalDescription);
 
             if (experience < 0)
                 return Errors.General.ValidationLength(experience.ToString(), "more than 0");
 
-            return new Volunteer(
-                VolunteerId.NewVolunteerId,
-                fioResult.Value,
-                phoneResult.Value,
-                emailResult.Value,
-                reqResult.Value,
-                description,
-                experience);
+            return new Volunteer(VolunteerId.NewVolunteerId,
+                fio, phone, email, requisites, generalDescription, experience);
         }
 
         public Result AddSocialNetwork(string name, string link)
