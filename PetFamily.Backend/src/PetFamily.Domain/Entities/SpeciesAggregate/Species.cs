@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PetFamily.Domain.Shared;
 
 namespace PetFamily.Domain.Entities.SpeciesAggregate
 {
@@ -44,14 +45,15 @@ namespace PetFamily.Domain.Entities.SpeciesAggregate
             return Result.Success();
         }
 
-        public static Result<Species> Create(string name)
+        public static Result<Species, Error> Create(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
-                return Result.Failure<Species>("Name cannot be empty");
-
-            var species = new Species(SpeciesId.NewSpeciesId, name);
-
-            return Result.Success(species);
+                return Errors.General.ValidationEmpty(name);
+            
+            if(name.Length < Constants.MAX_LENGTH_LOW_TEXT)
+                return Errors.General.ValidationLength(name, $"more than 0 and less than {Constants.MAX_LENGTH_LOW_TEXT}");
+            
+            return new Species(SpeciesId.NewSpeciesId, name);;
         }
     }
 }

@@ -1,21 +1,22 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 
 namespace PetFamily.Domain.Entities.VolunteerAggregate.ValueObjects
 {
     public record Requisites(string Name, string Description, string DescriptionTransfer)
     {
-        public static Result<Requisites> Create(string name, string description, string descriptionTransfer)
+        public static Result<Requisites,Error> Create(string name, string description, string descriptionTransfer)
         {
             if (string.IsNullOrWhiteSpace(name))
-                return Result.Failure<Requisites>("Name is required");
+                return Errors.General.ValidationEmpty(name);
 
             if (string.IsNullOrWhiteSpace(description))
-                return Result.Failure<Requisites>("Description is required");
+                return Errors.General.ValidationEmpty(description);
 
             if (string.IsNullOrWhiteSpace(descriptionTransfer))
-                return Result.Failure<Requisites>("Description for transfer is required");
+                return Errors.General.ValidationEmpty(descriptionTransfer);
 
-            return Result.Success(new Requisites(name, description, descriptionTransfer));
+            return new Requisites(name, description, descriptionTransfer);
         }
     }
 }
