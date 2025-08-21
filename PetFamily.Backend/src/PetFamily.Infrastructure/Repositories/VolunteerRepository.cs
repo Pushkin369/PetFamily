@@ -9,7 +9,7 @@ public class VolunteerRepository : IVolunteerRepository
 
     public VolunteerRepository(ApplicationDbContext dbContext)
     {
-            _dbContext = dbContext;
+        _dbContext = dbContext;
     }
 
     public async Task<Guid> Add(Volunteer volunteer, CancellationToken cancellationToken = default)

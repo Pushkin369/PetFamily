@@ -7,6 +7,7 @@ namespace PetFamily.Domain.Entities.VolunteerAggregate.ValueObjects;
 public sealed record Email
 {
     public const int EMAIL_MAX_LENGTH = 256;
+
     private static readonly Regex EmailRegex =
         new(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
@@ -22,10 +23,12 @@ public sealed record Email
         email = email.Trim();
 
         if (email.Length > EMAIL_MAX_LENGTH)
-            return Errors.General.ValidationLength(email, $"more than 0 and less than {EMAIL_MAX_LENGTH}");
+            return Errors.General.ValidationLength(email,
+                $"more than 0 and less than {EMAIL_MAX_LENGTH}");
 
         if (!EmailRegex.IsMatch(email))
-            return Errors.General.ValidationFormat(email, "name@exaple.com");
+            return Errors.General.ValidationFormat(email,
+                "name@exaple.com");
 
         return new Email(email);
     }

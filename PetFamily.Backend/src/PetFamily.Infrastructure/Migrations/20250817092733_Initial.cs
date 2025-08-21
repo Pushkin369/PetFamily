@@ -35,8 +35,8 @@ namespace PetFamily.Infrastructure.Migrations
                     name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     patronymic = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     surname = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Requisites = table.Column<string>(type: "jsonb", nullable: false),
-                    SocialNetworksList = table.Column<string>(type: "jsonb", nullable: false)
+                    requisites = table.Column<string>(type: "jsonb", nullable: false),
+                    social_networks = table.Column<string>(type: "jsonb", nullable: false)
                 },
                 constraints: table =>
                 {

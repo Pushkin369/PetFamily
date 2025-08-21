@@ -10,19 +10,10 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using PetFamily.Domain.Entities.SpeciesAggregate;
 using PetFamily.Domain.Shared;
+using PetFamily.Domain.Shared.Ids;
 
 namespace PetFamily.Domain.Entities.VolunteerAggregate
 {
-    public record PetId(Guid Value)
-    {
-        public static PetId NewPetId => new PetId(Guid.NewGuid());
-
-        public static PetId Empty => new PetId(Guid.Empty);
-
-        public static PetId Create(Guid id) => new PetId(id);
-    }
-
-
     public class Pet : Shared.Entity<PetId>
     {
         public SpeciesId SpeciesId { get; private set; }
@@ -43,22 +34,25 @@ namespace PetFamily.Domain.Entities.VolunteerAggregate
         public DateOnly DateOfBirth { get; private set; }
         public DateTime DateOfСreation { get; private set; }
 
-        private Pet() : base(default!) { }// For EF Core
-        private Pet(PetId petId) : base(petId) { } 
+        // For EF Core
+        private Pet() : base(default!)
+        {
+        }
+
 
         private Pet(
-            PetId petId, 
-            string name, 
-            string color, 
+            PetId petId,
+            string name,
+            string color,
             string generalDescription,
             string infoAboutHealthcharacteristic,
-            Phone ownerPhoneNumber, 
-            Address address, 
-            Characteristic characteristic, 
+            Phone ownerPhoneNumber,
+            Address address,
+            Characteristic characteristic,
             Requisites requisites,
-            bool isVaccinated, 
-            bool isCastrated, 
-            HelpStatusEnum helpStatus, 
+            bool isVaccinated,
+            bool isCastrated,
+            HelpStatusEnum helpStatus,
             DateOnly dateOfBirth) : base(petId)
         {
             Name = name;
@@ -77,16 +71,25 @@ namespace PetFamily.Domain.Entities.VolunteerAggregate
         }
 
         public static Result<Pet, Error> Create(
-            string name, 
-            string color, 
-            string generalDescription, 
+            string name,
+            string color,
+            string generalDescription,
             string infoAboutHealth,
             string ownerPhoneNumber,
-            string country, string state, string city, string street, string house, 
-            double weight, double height,
-            string nameReq, string descriptionReq, string descriptionTransferReq, 
-            bool isVaccinated, bool isCastrated,
-            HelpStatusEnum helpStatus, DateOnly dateOfBirth)
+            string country,
+            string state,
+            string city,
+            string street,
+            string house,
+            double weight,
+            double height,
+            string nameReq,
+            string descriptionReq,
+            string descriptionTransferReq,
+            bool isVaccinated,
+            bool isCastrated,
+            HelpStatusEnum helpStatus,
+            DateOnly dateOfBirth)
         {
             if (string.IsNullOrWhiteSpace(name))
                 return Errors.General.ValidationEmpty(name);
@@ -123,12 +126,22 @@ namespace PetFamily.Domain.Entities.VolunteerAggregate
                 return Errors.General.ValidationEmpty(dateOfBirth.ToString());
 
             if (dateOfBirth > DateOnly.FromDateTime(DateTime.UtcNow))
-                 return Errors.General.ValidationEmpty(dateOfBirth.ToString());
+                return Errors.General.ValidationEmpty(dateOfBirth.ToString());
 
             return new Pet(
-                PetId.NewPetId, name, color, generalDescription, infoAboutHealth,
-                phoneResult.Value, addressResult.Value, chResult.Value, reqResult.Value,
-                isVaccinated, isCastrated, helpStatus, dateOfBirth);
+                PetId.NewPetId,
+                name,
+                color,
+                generalDescription,
+                infoAboutHealth,
+                phoneResult.Value,
+                addressResult.Value,
+                chResult.Value,
+                reqResult.Value,
+                isVaccinated,
+                isCastrated,
+                helpStatus,
+                dateOfBirth);
         }
     }
 

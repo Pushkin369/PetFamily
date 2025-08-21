@@ -270,7 +270,40 @@ namespace PetFamily.Infrastructure.Migrations
 
             modelBuilder.Entity("PetFamily.Domain.Entities.VolunteerAggregate.Volunteer", b =>
                 {
-                    b.OwnsOne("PetFamily.Domain.Entities.VolunteerAggregate.SocialNetworkList", "SocialNetworksList", b1 =>
+                    b.OwnsOne("PetFamily.Domain.Entities.VolunteerAggregate.ValueObjects.Requisites", "Requisites", b1 =>
+                        {
+                            b1.Property<Guid>("VolunteerId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Description")
+                                .IsRequired()
+                                .HasMaxLength(1000)
+                                .HasColumnType("character varying(1000)")
+                                .HasColumnName("description_requisites");
+
+                            b1.Property<string>("DescriptionTransfer")
+                                .IsRequired()
+                                .HasMaxLength(1000)
+                                .HasColumnType("character varying(1000)")
+                                .HasColumnName("description_transfer");
+
+                            b1.Property<string>("Name")
+                                .IsRequired()
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)")
+                                .HasColumnName("name_requisites");
+
+                            b1.HasKey("VolunteerId");
+
+                            b1.ToTable("volunteers");
+
+                            b1.ToJson("requisites");
+
+                            b1.WithOwner()
+                                .HasForeignKey("VolunteerId");
+                        });
+
+                    b.OwnsOne("PetFamily.Domain.Entities.VolunteerAggregate.ValueObjects.SocialNetworkList", "SocialNetworksList", b1 =>
                         {
                             b1.Property<Guid>("VolunteerId")
                                 .HasColumnType("uuid");
@@ -279,7 +312,7 @@ namespace PetFamily.Infrastructure.Migrations
 
                             b1.ToTable("volunteers");
 
-                            b1.ToJson("SocialNetworksList");
+                            b1.ToJson("social_networks");
 
                             b1.WithOwner()
                                 .HasForeignKey("VolunteerId");
@@ -314,39 +347,6 @@ namespace PetFamily.Infrastructure.Migrations
                                 });
 
                             b1.Navigation("SocialNetworks");
-                        });
-
-                    b.OwnsOne("PetFamily.Domain.Entities.VolunteerAggregate.ValueObjects.Requisites", "Requisites", b1 =>
-                        {
-                            b1.Property<Guid>("VolunteerId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("Description")
-                                .IsRequired()
-                                .HasMaxLength(1000)
-                                .HasColumnType("character varying(1000)")
-                                .HasColumnName("description_requisites");
-
-                            b1.Property<string>("DescriptionTransfer")
-                                .IsRequired()
-                                .HasMaxLength(1000)
-                                .HasColumnType("character varying(1000)")
-                                .HasColumnName("description_transfer");
-
-                            b1.Property<string>("Name")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("character varying(100)")
-                                .HasColumnName("name_requisites");
-
-                            b1.HasKey("VolunteerId");
-
-                            b1.ToTable("volunteers");
-
-                            b1.ToJson("Requisites");
-
-                            b1.WithOwner()
-                                .HasForeignKey("VolunteerId");
                         });
 
                     b.Navigation("Requisites")

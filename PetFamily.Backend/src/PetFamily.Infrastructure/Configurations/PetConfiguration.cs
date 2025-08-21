@@ -4,6 +4,7 @@ using PetFamily.Domain.Entities.SpeciesAggregate;
 using PetFamily.Domain.Entities.VolunteerAggregate;
 using PetFamily.Domain.Entities.VolunteerAggregate.ValueObjects;
 using PetFamily.Domain.Shared;
+using PetFamily.Domain.Shared.Ids;
 
 namespace PetFamily.Infrastructure.Configurations;
 
@@ -56,8 +57,8 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
 
         builder.Property(x => x.OwnerPhoneNumber)
             .HasConversion(
-                phone => phone.Value,                     
-                value => Phone.Create(value).Value)   
+                phone => phone.Value,
+                value => Phone.Create(value).Value)
             .IsRequired()
             .HasColumnName("owner_phone_number");
 

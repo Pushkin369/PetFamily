@@ -14,13 +14,16 @@ namespace PetFamily.Domain.Entities.VolunteerAggregate.ValueObjects
                 return Errors.General.ValidationEmpty(surname);
 
             if (name.Length > Constants.MAX_LENGTH_LOW_TEXT)
-                return Errors.General.ValidationLength(name, $"more than 0 and less than {Constants.MAX_LENGTH_LOW_TEXT}");
+                return Errors.General.ValidationLength(name,
+                    $"more than 0 and less than {Constants.MAX_LENGTH_LOW_TEXT}");
 
             if (surname.Length > 100)
-                return Errors.General.ValidationLength(surname, $"more than 0 and less than {Constants.MAX_LENGTH_LOW_TEXT}");
+                return Errors.General.ValidationLength(surname,
+                    $"more than 0 and less than {Constants.MAX_LENGTH_LOW_TEXT}");
 
             if (!string.IsNullOrWhiteSpace(patronymic) && patronymic.Length > 100)
-                return Errors.General.ValidationLength(patronymic, $"more than 0 and less than {Constants.MAX_LENGTH_LOW_TEXT}");
+                return Errors.General.ValidationLength(patronymic,
+                    $"more than 0 and less than {Constants.MAX_LENGTH_LOW_TEXT}");
 
             return new FullName(name, surname, patronymic);
         }

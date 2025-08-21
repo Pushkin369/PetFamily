@@ -10,7 +10,7 @@ public record Phone(string Value)
 {
     private static readonly Regex PhoneRegex = new(@"^\+?\d{10,15}$", RegexOptions.Compiled);
 
-    public static Result<Phone,Error> Create(string phone)
+    public static Result<Phone, Error> Create(string phone)
     {
         if (string.IsNullOrWhiteSpace(phone))
             return Errors.General.ValidationEmpty(phone);
@@ -18,7 +18,8 @@ public record Phone(string Value)
         phone = phone.Trim();
 
         if (!PhoneRegex.IsMatch(phone))
-            return Errors.General.ValidationFormat(phone, "+7(999)999-99-99");
+            return Errors.General.ValidationFormat(phone, 
+                "+7(999)999-99-99");
 
         return new Phone(phone);
     }

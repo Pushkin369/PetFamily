@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Domain.Entities.VolunteerAggregate;
 using PetFamily.Domain.Entities.VolunteerAggregate.ValueObjects;
 using PetFamily.Domain.Shared;
+using PetFamily.Domain.Shared.Ids;
 
 namespace PetFamily.Infrastructure.Configurations;
 
@@ -39,22 +40,22 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
 
         builder.Property(x => x.Phone)
             .HasConversion(
-                phone => phone.Value,                     
-                value => Phone.Create(value).Value)   
+                phone => phone.Value,
+                value => Phone.Create(value).Value)
             .IsRequired()
             .HasColumnName("phone");
 
         builder.Property(p => p.Email)
             .HasColumnName("email")
             .HasConversion(
-                email => email.Value,                     
-                value => Email.Create(value).Value)  
+                email => email.Value,
+                value => Email.Create(value).Value)
             .IsRequired()
             .HasMaxLength(Constants.MAX_LENGTH_LOW_TEXT);
 
         builder.OwnsOne(req => req.Requisites, rb =>
         {
-            rb.ToJson();
+            rb.ToJson("requisites");
 
             rb.Property(p => p.Name)
                 .IsRequired()
@@ -71,7 +72,7 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
                 .HasColumnName("description_transfer")
                 .HasMaxLength(Constants.MAX_LENGTH_HIGTH_TEXT);
         });
-        
+
         builder.Property(x => x.GeneralDescription)
             .IsRequired(false)
             .HasColumnName("general_description")
@@ -87,7 +88,7 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
 
         builder.OwnsOne(p => p.SocialNetworksList, sb =>
         {
-            sb.ToJson();
+            sb.ToJson("social_networks");
 
             sb.OwnsMany(s => s.SocialNetworks, n =>
             {
